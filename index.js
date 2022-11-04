@@ -19,7 +19,7 @@ const document = new JSDOM().window.document
 
     const dir = process.cwd();
     const datadir = Path.join(dir, "data");
-    const fullPath = Path.join(datadir, "japan.csv");
+    const fullPath = Path.join(datadir, "eq_map.csv");
     const targetPath = Path.format({
                 dir: Path.join(dir, "svg"),
                 name: Path.basename(fullPath, Path.extname(fullPath)),
@@ -37,7 +37,7 @@ const document = new JSDOM().window.document
  // let p2p;
 //おまじない
 
-       request.get('https://api.p2pquake.net/v2/history?codes=551&limit=9',async(res,req,body) => {
+       request.get('https://api.p2pquake.net/v2/history?codes=551&limit=1',async(res,req,body) => {
        // console.log(body[0])
         p2p = JSON.parse(body);
         //console.log(p2p[0])
@@ -67,7 +67,7 @@ const document = new JSDOM().window.document
               .attr(`stroke-width`, 0.25)
               .attr(`fill`, (item) => {
                 function check() {
-                  for(var point of p2p[8].points){
+                  for(var point of p2p[0].points){
                       if(!pref){
                          maxscale = 0;
                          pref = point.pref;
