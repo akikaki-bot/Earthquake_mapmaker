@@ -39,7 +39,7 @@ const document = new JSDOM().window.document
  // let p2p;
 //おまじない
 
-       request.get('https://api.p2pquake.net/v2/history?codes=551&limit=1',async(res,req,body) => {
+       request.get('https://api.p2pquake.net/v2/jma/quake?min_scale=60&quake_type=DetailScale',async(res,req,body) => {
        // console.log(body[0])
         p2p = JSON.parse(body);
         //p2p = json
@@ -81,8 +81,9 @@ const document = new JSDOM().window.document
 
                       if((pref === item.properties.nam_ja)){
                        // console.log(`[〈適合〉確認 ] ${item.properties.nam_ja} / ${pref} + ${new Util().changesindo(maxscale)}`)
-                         
-                        return new Util().changesindo(maxscale)
+                         if(maxscale <= point.scale ){
+                           return new Util().changesindo(maxscale)
+                         }
                       } else {
                         pref = "";
                       }
@@ -92,6 +93,162 @@ const document = new JSDOM().window.document
                 return check();
               })
            
+              //震度色表示
+              svg.append("rect")
+              .attr("x", 20)
+              .attr("y", 130)
+              .attr("width",80)
+              .attr("height",200)
+              .attr("rx", 10)
+              .attr("ry",10)
+              .attr("opacity",0.5)
+
+              //震度7から１の棒
+              svg.append("rect")
+              .attr("x", 30)
+              .attr("y", 140)
+              .attr("width",5)
+              .attr("height",20)
+              .attr("opacity",0.5)
+              .attr("fill","#4b0082")
+
+              svg.append('text')
+              .attr("x",40)
+              .attr("y",155)
+              .attr("font-size", 15)
+              .attr('fill',"#FFFFFF")
+              .attr('font-family',"Roboto")
+              .text(`震度 7`)
+
+              svg.append("rect")
+              .attr("x", 30)
+              .attr("y", 160)
+              .attr("width",5)
+              .attr("height",20)
+              .attr("opacity",0.5)
+              .attr("fill","#b22222")
+
+              svg.append('text')
+              .attr("x",40)
+              .attr("y",175)
+              .attr("font-size", 15)
+              .attr('fill',"#FFFFFF")
+              .attr('font-family',"Roboto")
+              .text(`震度6強`)
+
+              svg.append("rect")
+              .attr("x", 30)
+              .attr("y", 180)
+              .attr("width",5)
+              .attr("height",20)
+              .attr("opacity",0.5)
+              .attr("fill","#800000")
+
+              svg.append('text')
+              .attr("x",40)
+              .attr("y",195)
+              .attr("font-size", 15)
+              .attr('fill',"#FFFFFF")
+              .attr('font-family',"Roboto")
+              .text(`震度6弱`)
+
+              svg.append("rect")
+              .attr("x", 30)
+              .attr("y", 200)
+              .attr("width",5)
+              .attr("height",20)
+              .attr("opacity",0.5)
+              .attr("fill","#d2691e")
+
+              svg.append('text')
+              .attr("x",40)
+              .attr("y",215)
+              .attr("font-size", 15)
+              .attr('fill',"#FFFFFF")
+              .attr('font-family',"Roboto")
+              .text(`震度5強`)
+
+              svg.append("rect")
+              .attr("x", 30)
+              .attr("y", 220)
+              .attr("width",5)
+              .attr("height",20)
+              .attr("opacity",0.5)
+              .attr("fill","#ffa500")
+
+              svg.append('text')
+              .attr("x",40)
+              .attr("y",235)
+              .attr("font-size", 15)
+              .attr('fill',"#FFFFFF")
+              .attr('font-family',"Roboto")
+              .text(`震度5弱`)
+
+              svg.append("rect")
+              .attr("x", 30)
+              .attr("y", 240)
+              .attr("width",5)
+              .attr("height",20)
+              .attr("opacity",0.5)
+              .attr("fill","#ffd700")
+
+              svg.append('text')
+              .attr("x",40)
+              .attr("y",255)
+              .attr("font-size", 15)
+              .attr('fill',"#FFFFFF")
+              .attr('font-family',"Roboto")
+              .text(`震度 4`)
+
+              svg.append("rect")
+              .attr("x", 30)
+              .attr("y", 260)
+              .attr("width",5)
+              .attr("height",20)
+              .attr("opacity",0.5)
+              .attr("fill","#008000")
+
+              svg.append('text')
+              .attr("x",40)
+              .attr("y",275)
+              .attr("font-size", 15)
+              .attr('fill',"#FFFFFF")
+              .attr('font-family',"Roboto")
+              .text(`震度 3`)
+
+              svg.append("rect")
+              .attr("x", 30)
+              .attr("y", 280)
+              .attr("width",5)
+              .attr("height",20)
+              .attr("opacity",0.5)
+              .attr("fill","#4682b4")
+
+              svg.append('text')
+              .attr("x",40)
+              .attr("y",295)
+              .attr("font-size", 15)
+              .attr('fill',"#FFFFFF")
+              .attr('font-family',"Roboto")
+              .text(`震度 2`)
+
+              svg.append("rect")
+              .attr("x", 30)
+              .attr("y", 300)
+              .attr("width",5)
+              .attr("height",20)
+              .attr("opacity",0.5)
+              .attr("fill","#778899")
+
+              svg.append('text')
+              .attr("x",40)
+              .attr("y",315)
+              .attr("font-size", 15)
+              .attr('fill',"#FFFFFF")
+              .attr('font-family',"Roboto")
+              .text(`震度 1`)
+
+
               //拝啓15の手紙
               svg.append("rect")
               .attr("x", 20)
@@ -123,7 +280,7 @@ const document = new JSDOM().window.document
 
               //棒 震度
               svg.append("rect")
-              .attr("x", 820)
+              .attr("x", 810)
               .attr("y", 320)
               .attr("width",5)
               .attr("height",30)
@@ -149,7 +306,7 @@ const document = new JSDOM().window.document
 
               //棒 Mag
               svg.append("rect")
-              .attr("x", 820)
+              .attr("x", 810)
               .attr("y", 370)
               .attr("width",5)
               .attr("height",30)
@@ -175,7 +332,7 @@ const document = new JSDOM().window.document
 
               //棒 深さ
               svg.append("rect")
-              .attr("x", 820)
+              .attr("x", 810)
               .attr("y", 420)
               .attr("width",5)
               .attr("height",30)
@@ -208,7 +365,7 @@ const document = new JSDOM().window.document
 
               //棒 津波の心配 に しようかとしたけどやっぱり震源
               svg.append("rect")
-              .attr("x", 820)
+              .attr("x", 810)
               .attr("y", 470)
               .attr("width",5)
               .attr("height",40)
@@ -228,12 +385,13 @@ const document = new JSDOM().window.document
               .attr("y",503)
               .attr("font-size", 18)
               .attr('fill',"#FFFFFF")
-              .attr('font-family',"Roboto")
               .attr("font-weight","bold")
+              .attr('font-family',"Roboto")
               .text(`${p2p[0].earthquake.hypocenter.name}`)
 
+              //棒
               svg.append("rect")
-              .attr("x", 820)
+              .attr("x", 810)
               .attr("y", 527)
               .attr("width",5)
               .attr("height",40)
@@ -277,7 +435,7 @@ const document = new JSDOM().window.document
               .append('circle')
               .attr("cx", singen[0])
               .attr("cy", singen[1])
-              .attr('r', 8)
+              .attr('r', 4)
               .attr('stroke', 'yellow') // 枠線色
               .attr('fill', 'red'); // 塗りつぶし色
               
