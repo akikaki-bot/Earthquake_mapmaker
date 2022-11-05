@@ -1,11 +1,11 @@
 # Earthquake_mapmaker
 
 ## tl;dr
-地震の震度分布図を描画するやつ
+地震の震度分布図を描画して、その他の情報も表示するやつ。
 
 ## どういうやつ？
 ↓こういうやつ↓
-![例のSVG](https://github.com/akikaki-bot/Earthquake_mapmaker/blob/main/svg/japan.svg)
+![例のSVG](https://github.com/akikaki-bot/Earthquake_mapmaker/blob/main/svg/eq_map.svg)
 
 ### しくみ
 ```
