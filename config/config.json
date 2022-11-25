@@ -1,0 +1,32 @@
+{
+    "$////////////":"///////////$",
+    "$NO_RE_WRITE":true,
+    "$EQMAP_CONFIG_VERSION":"VER1.0.0",
+    "$PLEASE_READ":"README.md",
+    "$MAIN_FILE":"index.js", 
+    "$YES_RE_Write":"↓",
+    "$///////////":"////////////$",
+    "main": {
+      "importfrom": {
+        "basegeojson":"http://images.akika.ga/japan.json",
+        "p2p":"https://api.p2pquake.net/v2/history?codes=551"
+      },
+      "SVG_saveto": {
+        "svgtemp":"svg",
+        "filename": "eq_map"
+      },
+      "PNG_saveto": {
+        "imagesaveto": "./images",
+        "filename": "eq_map.png"
+      },
+      "SVG_size":{
+        "width": 1000,
+        "height": 600,
+        "scale": 1600
+      },
+      "mconfig":{
+        "background_color": "#1c1b1b",
+        "stroke_color": "#666"
+      }
+    }
+}

@@ -1,3 +1,5 @@
+const { argv } = require('process');
+
 (async() => {
 
 const d3 = require('d3');
@@ -9,6 +11,7 @@ const Path = require('path');
 const Util = require('./util/changesindo.js')
 const request = require('request');
 const createtime = new Date();
+const { main } = require('./config/config.json');
 
 //testdata
 const json = require('./test/testdata.json')
@@ -21,17 +24,17 @@ const document = new JSDOM().window.document
 
     const dir = process.cwd();
     const datadir = Path.join(dir, "data");
-    const fullPath = Path.join(datadir, "eq_map.csv");
+    const fullPath = Path.join(datadir, main.SVG_saveto.filename);
     const targetPath = Path.format({
-                dir: Path.join(dir, "svg"),
+                dir: Path.join(dir, main.SVG_saveto.svgtemp),
                 name: Path.basename(fullPath, Path.extname(fullPath)),
                 ext: ".svg"
             });
 
 //サイズ指定
-    const width = 1000; 
-    const height = 600; 
-    const scale = 1600; 
+    const width = main.SVG_size.width; 
+    const height = main.SVG_size.height; 
+    const scale = main.SVG_size.scale; 
 
 //一時的
   let pref = "";
@@ -39,7 +42,7 @@ const document = new JSDOM().window.document
  // let p2p;
 //おまじない
 
-       request.get('https://api.p2pquake.net/v2/jma/quake?min_scale=60&quake_type=DetailScale',async(res,req,body) => {
+      request.get(main.importfrom.p2p,async(res,req,body) => {
        // console.log(body[0])
         p2p = JSON.parse(body);
         //p2p = json
@@ -54,11 +57,14 @@ const document = new JSDOM().window.document
               .attr("xmlns",'http://www.w3.org/2000/svg')
               .attr('width', width)
               .attr('height', height)
-              .style(`background-color`,"#001639")
+              .style(`background-color`,main.mconfig.background_color)
 
-              const data = await d3.json(`https://images.akika.ga/japan.json`);
+              const data = await d3.json(main.importfrom.basegeojson);
 
               //console.log(data);
+
+              const zoom = projection([p2p[0].earthquake.hypocenter.longitude,p2p[0].earthquake.hypocenter.latitude])
+              const zoomnum = new Util().zoom(p2p[0].points.length)
 
               svg
               .selectAll('path')
@@ -66,32 +72,24 @@ const document = new JSDOM().window.document
               .enter()
               .append(`path`)
               .attr(`d`, path)
-              .attr(`stroke`, `#666`)
+              .attr(`stroke`, main.mconfig.stroke_color)
               .attr(`stroke-width`, 0.25)
               .attr(`fill`, (item) => {
-                function check() {
-                  for(var point of p2p[0].points){
-                      if(!pref){
-                         maxscale = 0;
-                         pref = point.pref;
-                         maxscale = point.scale;
-                      }
+                   return new Util().maps(item,p2p,pref,maxscale)
+                })
+                .attr("transform", "translate(" + width/2 + "," + height/2 + ")scale(" + zoomnum + ")translate(" + - zoom[0] + "," + - zoom[1] + ")");
+                //.scale([zoom[0],zoom[1]])
 
-                      //console.log(`[確認] ${item.properties.nam_ja} / ${point.pref} != ${pref} + ${new Util().changesindo(maxscale)}`)
 
-                      if((pref === item.properties.nam_ja)){
-                       // console.log(`[〈適合〉確認 ] ${item.properties.nam_ja} / ${pref} + ${new Util().changesindo(maxscale)}`)
-                         if(maxscale <= point.scale ){
-                           return new Util().changesindo(maxscale)
-                         }
-                      } else {
-                        pref = "";
-                      }
-                   }
-                   
-                }
-                return check();
-              })
+              svg.append("text")
+              .attr("x", 0)
+              .attr("y", 20)
+              .attr("width",80)
+              .attr("height",20)
+              .attr("opacity",0.5)
+              .attr('fill',"#FFFFFF")
+              .text(`x${zoomnum}`)
+              
            
               //震度色表示
               svg.append("rect")
@@ -254,7 +252,7 @@ const document = new JSDOM().window.document
               .attr("x", 20)
               .attr("y", 30)
               .attr("width",200)
-              .attr("height",80)
+              .attr("height",70)
               .attr("rx", 10)
               .attr("ry",10)
               .attr("opacity",0.5)
@@ -266,6 +264,24 @@ const document = new JSDOM().window.document
               .attr('fill',"#FFFFFF")
               .attr('font-family',"Roboto")
               .text("地図データ : 国土地理院 / Natural Earth")
+
+
+
+              svg.append('rect')
+              .attr("x",480)
+              .attr("y",550)
+              .attr("width",300)
+              .attr("height",30)
+              .attr("opacity",0.8)
+
+              svg.append('text')
+              .attr("x",485)
+              .attr("y",570)
+              .attr("font-size", 17)
+              .attr('fill',"#FFFFFF")
+              .attr('font-family',"Roboto")
+              .attr("font-weight","bold")
+              .text(`${new Util().texttsunami(p2p[0].earthquake.domesticTsunami)}`)
 
 
               //インフォメーションの拝啓ボックス
